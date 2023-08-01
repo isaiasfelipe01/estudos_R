@@ -1,0 +1,159 @@
+---
+title: "Aula de Econometria 1"
+author: "Wallace Patrick"
+date: "2022-10-25"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estatísticas descritivas
+
+```{r}
+#install.packages("readr")
+#Carrega a base de dados
+library(readr)
+dados_socio_economicos <- read_xlsx("dados_socio_economicos.xlsx")
+
+View(dados_socio_economicos)
+```
+
+
+```{r}
+library(janitor)
+#Esse pacote tem a função de remover caracteres indesejados dentro das variáveis 
+names(dados_socio_economicos)
+dados_socio_economicos<- clean_names(dados_socio_economicos)
+
+names(dados_socio_economicos)
+
+```
+
+
+
+```{r}
+#Estatísticas descritivas
+#Função_estatistica(base_de_dados$variavel_que_quer_analisar)
+mean(dados_socio_economicos$populacao_estimada)
+
+median(dados_socio_economicos$populacao_estimada)
+
+quantile(dados_socio_economicos$populacao_estimada)
+
+quantile(dados_socio_economicos$populacao_estimada, probs = 0.1)
+```
+
+-   Amplitude
+
+```{r}
+max(dados_socio_economicos$populacao_estimada) - min(dados_socio_economicos$populacao_estimada)
+
+```
+
+
+Variância
+
+```{r}
+var(dados_socio_economicos$populacao_estimada)
+```
+
+Desvio padrão
+
+```{r}
+sd(dados_socio_economicos$populacao_estimada)
+```
+
+
+Coeficiente de variação
+
+```{r}
+sd(dados_socio_economicos$populacao_estimada)/mean(dados_socio_economicos$populacao_estimada)
+```
+
+
+Estatísticas Básicas Descritivas
+
+```{r}
+summary(dados_socio_economicos)
+
+```
+
+
+
+## Gráficos
+
+
+```{r}
+library(ggplot2)
+#ggplot(data = base_de_dados)+o gráfico que deseja usar
+ggplot(data= dados_socio_economicos)+
+  geom_bar(aes(x=uf))
+```
+
+
+```{r}
+library(tidyverse)
+
+dados_socio_economicos %>% #pype
+  ggplot()+
+  geom_point(aes(x= populacao_estimada, y = pib_per_capita))
+
+```
+
+
+```{r}
+dados_socio_economicos %>%
+  ggplot()+
+  geom_point(aes(x= log10(populacao_estimada), y = log10(pib_per_capita)))
+
+```
+
+
+
+```{r}
+dados_socio_economicos %>%
+  ggplot()+
+  geom_point(aes(x= populacao_estimada, y = pib_per_capita )) +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+
+
+## Distribuição Normal
+
+
+```{r}
+media =  70
+desv_pad = 12.5
+
+dist <- rnorm(n =1000, mean= media, sd=desv_pad)
+
+dist
+```
+
+Agora a distribuição representada num gráfico de histograma
+
+```{r}
+library(tidyverse)
+library(dplyr)
+base_01 <- tibble(dist= dist)
+
+base_01 %>%
+  ggplot()+
+  geom_histogram(aes(x=dist), color="white", fill="blue", bins = 20)
+```
+
+
+```{r}
+base_01 %>%
+  ggplot()+
+  geom_density(aes(x=dist), fill = "blue" )
+
+```
+
+
