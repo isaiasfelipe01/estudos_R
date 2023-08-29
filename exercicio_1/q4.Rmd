@@ -1,0 +1,42 @@
+---
+title: "Questão 4"
+author: "eu"
+date: "2023-08-16"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+
+fazendo a database com os dados fornecidos na questão.
+```{r}
+my_data <- data.frame(
+  Periodo = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+  Consumo = c(100, 110, 115, 119, 120, 123, 125, 127, 130, 134, 136),
+  Renda = c(300, 330, 335, 337, 338, 340, 348, 350, 355, 366, 367),
+  Taxa = c(0.15, 0.12, 0.10, 0.10, 0.10, 0.09, 0.09, 0.09, 0.08, 0.08, 0.07)
+)
+
+
+my_data
+
+```
+Analisando os dados.
+```{r}
+names(my_data)
+summary(my_data)
+```
+
+Estimando os modelos de acordo com a questão.
+```{r}
+modelo1 <- lm(data = my_data, Consumo ~ Renda)
+modelo1
+
+modelo2 <- lm(data = my_data, Consumo ~ Taxa)
+modelo2
+
+modelo3 <- lm(data = my_data, Consumo ~ Renda + Taxa)
+modelo3
+```
+
+

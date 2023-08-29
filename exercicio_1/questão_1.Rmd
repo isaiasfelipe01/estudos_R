@@ -1,0 +1,40 @@
+---
+title: "Lista exercícios 1"
+author: "Isaías Felipe Silva de Sousa"
+date: "2023-08-08"
+output:
+  word_document: default
+  html_document: default
+---
+
+Importando pacotes para ultilizar na questão.
+
+```{r}
+library(readxl)
+```
+
+Imporando tabela disponibilizada no livro. Aqui eu peguei todos os dados disponibilizados no livro e coloquei em uma tabela no excel para importar para o R.
+
+```{r}
+tabela <- read_xlsx("C:/Users/isaias/Desktop/UFPB/2023.1/ECONOMETRIA/exercicio_1/rosas.xlsx")
+View(tabela)
+names(tabela)
+attach(tabela)
+summary(tabela)
+```
+
+Estimando modelo 1.
+
+```{r}
+modelo1 <- lm(data = tabela, Y ~ X2 + X3 + X4 + X5)
+modelo1
+
+```
+
+Estimando o modelo 2 implementando o log.
+
+```{r}
+modelo2 <- lm(data = tabela, log(Y) ~ log(X2) + log(X3) + log(X4) + X5)
+modelo2
+
+```
