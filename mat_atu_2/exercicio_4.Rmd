@@ -1,0 +1,126 @@
+---
+title: "4° lista de exercício"
+author: "Isaías Felipe Silva de Sousa"
+date: "2024-08-20"
+output: word_document
+---
+## Dados 
+```{r}
+#Importando pacote lifecontingencies
+library(lifecontingencies)
+#Adicionando os dados
+x <- 30; y <- 28; diferimento <- 20; b <-  6000; i <- 0.055; v <- 1/(1+i)
+masculino <- read.csv2("masculino.csv")
+feminino <- read.csv2("feminino.csv")
+masculino <- probs2lifetable(masculino$q, type = "qx", radix=1000, name="MASCULINO")
+feminino <- probs2lifetable(feminino$q, type = "qx", radix=1000, name="FEMININO")
+masculino <- new("actuarialtable", x = masculino@x, lx = masculino@lx, interest = i, name = "MASCULINO")
+feminino <- new("actuarialtable", x = feminino@x, lx = feminino@lx, interest = i, name = "FEMININO")
+#Lista com as duas tábuas e idades
+tabuas <- list(masculino, feminino); idades = c(x, y)
+```
+## Questão 1
+Prêmio = R$67.36
+Reserva = R$925.23
+Resgate = R$906.73
+```{r}
+#QUESTÃO 1
+#Prêmio
+premio = ((b * Axyzn(tabuas, idades, m=diferimento, status = "joint")) / (axyzn(tabuas, idades, n=10, status = "joint")))
+premio
+#Reserva
+reserva <- b * (Axyzn(tabuas, idades + 10, m=diferimento-10, status = "joint"))
+reserva
+#Resgate
+valor_resgate <- 0.98*reserva
+valor_resgate
+```
+## Questão 2
+Reserva de recorrência = R$978.44
+Resgate concedido = R$929.52
+Seguro saldado = R$5700.00
+```{r}
+#QUESTÃO 2
+#Probabilidade de sobrevivência para vida conjunta
+p = pxyzt(tabuas, idades+10, t=1, status="joint")
+#Resereva de recorrência
+recorrencia <- reserva/(p*(v^1))
+recorrencia
+#Resgate concedido
+resgate <- recorrencia*0.95
+resgate
+#Sguro saldado
+saldado <- resgate/Axyzn(tabuas, idades+11, m=diferimento-11, status = "joint")
+saldado
+```
+## Questão 3
+Prêmio = R$42.88
+Reserva = R$26.67
+Resgate = R$25.34
+Seguro saldado = R$114.05
+```{r}
+#Dados questão 3
+idades_2 <- c(42, 40); b_2 <- 3000; despesa <- 0.025
+#Prêmio
+premio_2 <- ((b_2*Axyzn(tabuas, idades_2, status="joint"))+(despesa*b_2))/(axyzn(tabuas, idades_2, status="joint"))
+premio_2
+#Reserva
+reserva_2 <- (b_2*Axyzn(tabuas, idades_2+3, status="joint"))-((premio_2*(axyzn(tabuas, idades_2+3, status="joint"))))
+reserva_2
+#Resgate
+resgate_2 <- reserva_2*0.95
+resgate_2
+#Seguro saldado
+saldado_2 <- resgate_2/Axyzn(tabuas, idades_2+3, status = "joint")
+saldado_2
+```
+## Questão 4
+Prêmio = R$4.25
+Reserva = R$1.73
+Resgate = R$1.03
+Seguro saldado = R$4.14
+```{r}
+#Dados questão 4
+idades_3 <- c(60, 55); n <- 15; b_3 <- 3000
+#Prêmio
+premio_3 <- ((b_3*Axyzn(tabuas, idades_3, n=n, status="last")))/(axyzn(tabuas, idades_3, n=n, status="joint"))
+premio_3
+#Reserva
+reserva_3 <- (b_3*Axyzn(tabuas, idades_3+7, n=n-7, status="last"))-((premio_3*(axyzn(tabuas, idades_3+7, n=n-7, status="joint"))))
+reserva_3
+#Resgate
+resgate_3 <- 0.6*reserva_3
+resgate_3
+#Seuro saldado
+saldado_3 <- resgate_3/(Axyzn(tabuas, idades_3+7, status="last"))
+saldado_3
+```
+## Questão 5
+Prêmio = R$0.80
+Reserva = R$2.61
+Resgate = R$2.35
+Seguro saldado = R$11.30
+```{r}
+#Dados questão 5
+idades_4 <- c(60, 55); n_2 <- 3; b_4 <- 20
+#Prêmio
+premio_4 <- ((b_4*Axyzn(tabuas, idades_4, status="last")))/(axyzn(tabuas, idades_4, n=5, status="last")*(1-0.01))
+premio_4
+#Reserva
+reserva_4 <- (b_4*Axyzn(tabuas, idades_4+3, status="last"))-(premio_4*(axyzn(tabuas, idades_4+3, n=2, status="joint"))*(1-0.01))
+reserva_4
+#Resgate
+resgate_4 <- 0.9*reserva_4
+resgate_4
+#Seguro saldado
+saldado_4 <- resgate_4/(Axyzn(tabuas, idades_4+3, status="last"))
+saldado_4
+```
+## Questão 6
+Temporariedade = 8
+```{r}
+Axs <- (200/2000)
+d <- (log(1+i))
+s <- ((log(1-64*d*Axs))/(log(v)))
+s
+```
